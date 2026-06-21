@@ -1,8 +1,10 @@
+```python
 import streamlit as st
 
-st.title("Solar Qualification Bot")
+# Page title
+st.title("Free Solar Savings Check")
 
-st.write("Answer a few quick questions below.")
+st.write("Answer a few quick questions to see if you qualify.")
 
 # Questions
 q1 = st.radio(
@@ -16,24 +18,33 @@ q2 = st.radio(
 )
 
 bill = st.number_input(
-    "About what do you normally pay for electricity each month? ($)",
+    "About what do you normally pay for electricity each month ($)",
     min_value=0
 )
 
 q4 = st.radio(
-    "If we could lower that bill, is that something you'd want to explore?",
+    "If we could lower that bill, would you be interested?",
     ["Yes", "No"]
 )
 
 name = st.text_input("Your name")
 phone = st.text_input("Best phone number")
 
-# Button
+# Submit button
 if st.button("Check Qualification"):
 
-    if q1 == "Yes" and q2 == "Yes" and bill > 120 and q4 == "Yes":
-        st.success("You qualify for a solar consultation.")
-        st.write("Lead captured successfully.")
+    # Basic validation
+    if name == "":
+        st.error("Please enter your name.")
+    
+    elif len(phone) < 10:
+        st.error("Please enter a valid phone number.")
 
     else:
-        st.error("Based on your answers, you do not qualify at this time.")
+        # Qualification logic
+        if q1 == "Yes" and q2 == "Yes" and bill > 120 and q4 == "Yes":
+            st.success("✅ You qualify for a solar consultation.")
+            st.write("Our team will contact you shortly.")
+
+        else:
+            st.warning("⚠️ Based on your answers, you may not qualify at this time.")
