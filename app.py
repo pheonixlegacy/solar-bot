@@ -424,22 +424,23 @@ elif st.session_state.step == 8:
     if st.button("CONTINUE STEP 8"):
 
         if not zip_code.startswith(tuple(ALLOWED_PREFIXES)):
-
             st.error("Sorry — service unavailable in your area.")
 
         else:
-
             st.session_state.zip = zip_code
-
             st.session_state.step = 9
-
             st.rerun()
-            # ---------- STEP 9 LEAD CAPTURE ----------
+
+
 elif st.session_state.step == 9:
 
     st.progress(95)
 
     st.title("Your Home May Qualify")
+
+    st.write("""
+Where should we send your personalized solar savings estimate?
+""")
 
     name = st.text_input("Full Name")
     phone = st.text_input("Phone Number")
@@ -450,37 +451,31 @@ elif st.session_state.step == 9:
 
 A solar advisor may contact you shortly.
 """)
-
-    if st.button("GET MY SAVINGS REPORT →"):
+        if st.button("GET MY SAVINGS REPORT →"):
 
         if name == "":
             st.error("Please enter your name.")
 
-    elif phone == "":
-        st.error("Please enter your phone number.")
+        elif phone == "":
+            st.error("Please enter your phone number.")
 
-    elif len(phone) != 10 or not phone.isdigit():
-        st.error("Please enter a valid 10 digit phone number.")
+        elif len(phone) != 10 or not phone.isdigit():
+            st.error("Please enter a valid 10 digit phone number.")
 
-    elif email == "":
-        st.error("Please enter email address.")
+        elif email == "":
+            st.error("Please enter email address.")
 
-    else:
-    # homeowner
-    score += 3
+        else:
+            score = 3
 
-    # high electric bill
-    if st.session_state.bill > 250:
-        score += 3
+        if st.session_state.bill > 250:
+            score += 3
 
-    # roof exposure
-    if st.session_state.roof == "Full Sun Most Of Day":
-        score += 2
+        if st.session_state.roof == "Full Sun Most Of Day":
+            score += 2
 
-    # interested
-    if st.session_state.interested == "Yes":
-        score += 3
-
+        if st.session_state.interested == "Yes":
+            score += 3
 
             today = datetime.now().strftime("%m/%d/%Y")
 
