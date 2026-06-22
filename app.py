@@ -453,6 +453,7 @@ Where should we send your personalized solar savings estimate?
 
 A solar advisor may contact you shortly.
 """)
+
     if st.button("GET MY SAVINGS REPORT →"):
 
         if name == "":
@@ -470,14 +471,14 @@ A solar advisor may contact you shortly.
         else:
             score = 3
 
-        if st.session_state.bill > 250:
-            score += 3
+            if st.session_state.bill > 250:
+                score += 3
 
-        if st.session_state.roof == "Full Sun Most Of Day":
-            score += 2
+            if st.session_state.roof == "Full Sun Most Of Day":
+                score += 2
 
-        if st.session_state.interested == "Yes":
-            score += 3
+            if st.session_state.interested == "Yes":
+                score += 3
 
             today = datetime.now().strftime("%m/%d/%Y")
 
@@ -511,16 +512,10 @@ A solar advisor may contact you shortly.
                 data=json.dumps(data)
             )
 
-response = requests.post(
-    url,
-    headers=headers,
-    data=json.dumps(data)
-)
+            if response.status_code == 200:
 
-if response.status_code == 200:
-
-    discord_data = {
-        "content": f"""
+                discord_data = {
+                    "content": f"""
 🚨 NEW SOLAR LEAD 🚨
 
 Name: {name}
@@ -533,15 +528,15 @@ Bill: ${st.session_state.bill}
 
 Lead Score: {score}
 """
-    }
+                }
 
-    requests.post(DISCORD_WEBHOOK, json=discord_data)
+                requests.post(DISCORD_WEBHOOK, json=discord_data)
 
-    st.session_state.step = 10
-    st.rerun()
+                st.session_state.step = 10
+                st.rerun()
 
-else:
-    st.error("Airtable Error")
+            else:
+                st.error("Airtable Error")
 # ---------- SUCCESS ----------
 elif st.session_state.step == 10:
 
