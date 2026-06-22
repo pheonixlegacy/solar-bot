@@ -121,6 +121,8 @@ BASE_ID = "appQdfXVEYUcfsb4t"
 
 TABLE_NAME = "Table 1"
 
+DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1518638918386581545/uzEFI4DYbrVqqjklMQXN2DbdLpurDsfobeCZbxwK35rPcp6Dt0EKX1XjF59nGkTSOv10"
+
 # ---------- ZIP PREFIXES ----------
 ALLOWED_PREFIXES = [
     "90","91","92","93","94","95","96",
@@ -509,18 +511,37 @@ A solar advisor may contact you shortly.
                 data=json.dumps(data)
             )
 
-            if response.status_code == 200:
+            response = requests.post(
+    url,
+    headers=headers,
+    data=json.dumps(data)
+)
 
-                st.session_state.step = 10
+if response.status_code == 200:
 
-                st.rerun()
+    discord_data = {
+        "content": f"""
+🚨 NEW SOLAR LEAD 🚨
 
-            else:
+Name: {name}
+Phone: {phone}
+Email: {email}
+ZIP: {st.session_state.zip}
 
-                st.error("Airtable Error")
+Utility: {st.session_state.utility}
+Bill: ${st.session_state.bill}
 
-                st.write(response.text)
+Lead Score: {score}
+"""
+    }
 
+    requests.post(DISCORD_WEBHOOK, json=discord_data)
+
+    st.session_state.step = 10
+    st.rerun()
+
+else:
+    st.error("Airtable Error")
 
 # ---------- SUCCESS ----------
 elif st.session_state.step == 10:
