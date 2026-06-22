@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 import json
 
-AIRTABLE_TOKEN = "HIDDEN"
+AIRTABLE_TOKEN = "patryhLp1nLG9lPDB.3281b1a26270f1c0b90483155629d9d4acc983e23e3b885889fabd663372fe3b"
 BASE_ID = "appQdfXVEYUcfsb4t"
 TABLE_NAME = "Solar leads"
 
