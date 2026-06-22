@@ -511,7 +511,7 @@ A solar advisor may contact you shortly.
                 data=json.dumps(data)
             )
 
-            response = requests.post(
+response = requests.post(
     url,
     headers=headers,
     data=json.dumps(data)
@@ -542,7 +542,6 @@ Lead Score: {score}
 
 else:
     st.error("Airtable Error")
-
 # ---------- SUCCESS ----------
 elif st.session_state.step == 10:
 
