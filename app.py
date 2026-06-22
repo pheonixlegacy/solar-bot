@@ -3,7 +3,50 @@ import requests
 import json
 from datetime import datetime
 
-# Airtable config
+# ---------------- UI Styling ----------------
+st.markdown("""
+<style>
+
+/* Background */
+.stApp {
+    background: linear-gradient(135deg, #020617, #0f172a, #1e3a8a);
+}
+
+/* Main title */
+h1 {
+    text-align: center;
+    color: white;
+    font-size: 48px;
+    font-weight: bold;
+}
+
+/* Buttons */
+.stButton > button {
+    width: 100%;
+    height: 55px;
+    border-radius: 14px;
+    font-weight: bold;
+    font-size: 18px;
+    background-color: #22c55e;
+    color: white;
+}
+
+/* Text input boxes */
+.stTextInput > div > div > input {
+    border-radius: 12px;
+    padding: 10px;
+}
+
+/* Number input */
+.stNumberInput input {
+    border-radius: 12px;
+    padding: 10px;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+# ---------------- Airtable config ----------------
 AIRTABLE_TOKEN = "patryhLp1nLG9lPDB.3281b1a26270f1c0b90483155629d9d4acc983e23e3b885889fabd663372fe3b"
 BASE_ID = "appQdfXVEYUcfsb4t"
 TABLE_NAME = "Table 1"
