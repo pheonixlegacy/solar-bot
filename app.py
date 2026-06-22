@@ -3,82 +3,103 @@ import requests
 import json
 from datetime import datetime
 
-# ---------------- UI Styling ----------------
+# ---------- PAGE CONFIG ----------
+st.set_page_config(
+    page_title="Solar Savings Check",
+    layout="centered"
+)
+
+# ---------- CUSTOM CSS ----------
 st.markdown("""
 <style>
 
-/* Tesla Style Background */
+/* Background */
 .stApp {
-    background-image: url("https://images.unsplash.com/photo-1592833159155-c62df1b65634");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
+    background: #0b1120;
 }
 
-/* Floating Glass Card */
+/* Hero image */
+img {
+    border-radius: 18px;
+}
+
+/* Main card */
 .main .block-container {
-    max-width: 650px;
-    background: rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    max-width: 760px;
+    background: rgba(17, 24, 39, 0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     padding: 2rem;
-    border-radius: 24px;
-    margin-top: 2rem;
+    border-radius: 22px;
+    margin-top: 1rem;
+    box-shadow: 0px 8px 30px rgba(0,0,0,0.35);
 }
 
-/* Main Title */
+/* Headings */
 h1 {
     text-align: center;
     color: white;
-    font-size: 48px;
-    font-weight: bold;
+    font-size: 44px !important;
+    font-weight: 800 !important;
 }
 
-/* Paragraph text */
-p, label {
-    color: white !important;
+/* Text */
+p, label, div {
+    color: #f3f4f6 !important;
 }
 
-/* Buttons */
+/* Inputs */
+.stTextInput > div > div > input {
+    background-color: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px;
+    padding: 12px;
+    color: white;
+}
+
+.stNumberInput input {
+    background-color: rgba(255,255,255,0.08);
+    border-radius: 12px;
+    color: white;
+}
+
+/* Button */
 .stButton > button {
     width: 100%;
     height: 65px;
     border-radius: 14px;
     font-weight: bold;
-    font-size: 22px;
-    background-color: #22c55e;
+    font-size: 20px;
+    background: linear-gradient(90deg, #22c55e, #16a34a);
     color: white;
     border: none;
-    box-shadow: 0px 4px 15px rgba(34,197,94,0.35);
+    box-shadow: 0px 4px 20px rgba(34,197,94,.30);
 }
 
-/* Text Input */
-.stTextInput > div > div > input {
-    background-color: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 12px;
-    padding: 10px;
-    color: white;
+/* Small trust text */
+.trust {
+    text-align:center;
+    color:#9ca3af;
+    font-size:14px;
+    margin-bottom:20px;
 }
 
-/* Number Input */
-.stNumberInput input {
-    background-color: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 12px;
-    padding: 10px;
-    color: white;
+.benefits {
+    text-align:center;
+    font-size:16px;
+    margin-bottom:10px;
+    line-height:1.8;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
-# ---------------- Airtable config ----------------
+# ---------- AIRTABLE ----------
 AIRTABLE_TOKEN = "patryhLp1nLG9lPDB.3281b1a26270f1c0b90483155629d9d4acc983e23e3b885889fabd663372fe3b"
 BASE_ID = "appQdfXVEYUcfsb4t"
 TABLE_NAME = "Table 1"
 
-# Allowed service ZIP codes
+# ---------- ZIPS ----------
 ALLOWED_ZIPS = [
     "60037",
     "60199",
@@ -86,39 +107,55 @@ ALLOWED_ZIPS = [
     "60699"
 ]
 
-# Page title
-st.title("⚡ See If Your Home Qualifies For Solar Savings")
-st.write("Save up to 30% on electricity in under 30 seconds.")
+# ---------- HERO SECTION ----------
+st.image("tesla-house.png", use_container_width=True)
 
-# Questions
+st.title("⚡ Lower Your Electric Bill By Up To 30%")
+
+st.markdown("""
+<div class="benefits">
+✓ Federal solar incentives available<br>
+✓ Zero upfront options may be available<br>
+✓ Serving select Illinois homeowners
+</div>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<div class="trust">
+Check eligibility in under 30 seconds.
+</div>
+""", unsafe_allow_html=True)
+
+st.subheader("Quick Solar Qualification")
+
+# ---------- FORM ----------
 q1 = st.radio(
-    "Have you looked into solar for your home before?",
+    "Have you looked into solar before?",
     ["Yes", "No"]
 )
 
 q2 = st.radio(
-    "Are you the homeowner there?",
+    "Are you the homeowner?",
     ["Yes", "No"]
 )
 
 bill = st.number_input(
-    "About what do you normally pay for electricity each month ($)",
+    "Monthly electric bill ($)",
     min_value=0
 )
 
 q4 = st.radio(
-    "If we could lower that bill, would you be interested?",
+    "If we lower your bill, are you interested?",
     ["Yes", "No"]
 )
 
-name = st.text_input("Your name")
-phone = st.text_input("Best phone number")
+name = st.text_input("Full Name")
+phone = st.text_input("Phone Number")
 zip_code = st.text_input("ZIP Code")
 
-# Submit
-if st.button("Check Qualification"):
+# ---------- SUBMIT ----------
+if st.button("CHECK MY SAVINGS →"):
 
-    # validation
     if name == "":
         st.error("Please enter your name.")
 
@@ -129,20 +166,20 @@ if st.button("Check Qualification"):
         st.error("Please enter ZIP code.")
 
     elif zip_code not in ALLOWED_ZIPS:
-        st.error("Sorry, we do not currently service your area.")
+        st.error("Sorry, we do not service your area yet.")
 
     elif q2 != "Yes":
-        st.error("Sorry, only homeowners qualify at this time.")
+        st.error("Currently only homeowners qualify.")
 
     elif bill < 100:
-        st.error("Your electric bill must be over $100 to qualify.")
+        st.error("Minimum electric bill is $100.")
 
     elif q4 != "Yes":
-        st.error("No problem — reach out if you change your mind.")
+        st.error("No problem. Reach out anytime.")
 
     else:
-        # qualifies
-        st.success("You qualify for a solar consultation.")
+
+        st.success("🎉 You qualify for a solar consultation.")
 
         today = datetime.now().strftime("%m/%d/%Y")
 
@@ -173,7 +210,8 @@ if st.button("Check Qualification"):
         )
 
         if response.status_code == 200:
-            st.write("Your information has been saved.")
+            st.success("Your information has been saved.")
+
         else:
             st.error("Airtable Error:")
             st.write(response.text)
