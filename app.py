@@ -10,32 +10,29 @@ st.set_page_config(
     layout="centered"
 )
 
-# ---------- SESSION STATE ----------
+# ---------- SESSION ----------
 if "step" not in st.session_state:
     st.session_state.step = 0
 
 if "selection" not in st.session_state:
     st.session_state.selection = None
 
-
-# ---------- LOAD BACKGROUND IMAGE ----------
+# ---------- LOAD IMAGE ----------
 def get_base64(file_name):
     with open(file_name, "rb") as img_file:
         return base64.b64encode(img_file.read()).decode()
 
 bg = get_base64("JPEG image.jpeg")
 
-
-# ---------- PREMIUM CSS ----------
+# ---------- CSS ----------
 st.markdown(f"""
 <style>
 
-/* BACKGROUND */
 .stApp {{
     background-image:
         linear-gradient(
-            rgba(0,0,0,.82),
-            rgba(0,0,0,.82)
+            rgba(0,0,0,.84),
+            rgba(0,0,0,.84)
         ),
         url("data:image/jpeg;base64,{bg}");
 
@@ -44,73 +41,52 @@ st.markdown(f"""
     background-attachment: fixed;
 }}
 
-/* HIDE STREAMLIT DEFAULTS */
-#MainMenu {{
-    visibility: hidden;
-}}
+#MainMenu {{visibility:hidden;}}
+footer {{visibility:hidden;}}
+header {{visibility:hidden;}}
 
-footer {{
-    visibility: hidden;
-}}
-
-header {{
-    visibility: hidden;
-}}
-
-/* MAIN CARD */
 .main .block-container {{
-    max-width: 760px;
-    background: rgba(10,15,25,.72);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
+    max-width:760px;
+    background:rgba(10,15,25,.72);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
 
-    padding: 3rem;
-    margin-top: 2rem;
+    padding:3rem;
+    margin-top:2rem;
 
-    border-radius: 28px;
+    border-radius:28px;
 
-    border: 1px solid rgba(255,255,255,.08);
-
-    box-shadow: 0 10px 40px rgba(0,0,0,.35);
+    border:1px solid rgba(255,255,255,.08);
 }}
 
-/* HEADINGS */
 h1 {{
-    color: white !important;
-    text-align: center;
-    font-size: 54px !important;
-    font-weight: 700 !important;
-    margin-bottom: 10px;
+    color:white !important;
+    text-align:center;
+    font-size:54px !important;
 }}
 
-h2, h3 {{
-    color: white !important;
-    text-align: center;
+h2,h3,p,label {{
+    color:white !important;
+    text-align:center;
 }}
 
 p {{
-    color: #d1d5db !important;
-    text-align: center;
-    font-size: 17px;
-    line-height: 1.8;
+    color:#d1d5db !important;
+    line-height:1.8;
 }}
 
-label {{
-    color: white !important;
+.card {{
+    background:rgba(255,255,255,.04);
+    padding:25px;
+    border-radius:18px;
+    margin-bottom:15px;
+    border:1px solid rgba(255,255,255,.08);
+    text-align:center;
 }}
 
-/* TRUST TEXT */
-.trust {{
-    text-align: center;
-    color: #d1d5db;
-    margin-top: 12px;
-    line-height: 2;
-}}
-
-/* BUTTONS */
 .stButton > button {{
-    width: 100%;
-    height: 68px;
+    width:100%;
+    height:68px;
 
     background:
         linear-gradient(
@@ -119,48 +95,24 @@ label {{
             #fbbf24
         );
 
-    color: black;
+    color:black;
 
-    font-size: 20px;
-    font-weight: bold;
+    font-size:20px;
+    font-weight:bold;
 
-    border: none;
-    border-radius: 16px;
-
-    box-shadow:
-        0 6px 25px rgba(251,191,36,.30);
+    border:none;
+    border-radius:16px;
 }}
 
-/* BIG SELECTION CARDS */
-.card {{
-    background: rgba(255,255,255,.04);
-    padding: 25px;
-    border-radius: 18px;
-    margin-bottom: 15px;
-    border: 1px solid rgba(255,255,255,.08);
-    text-align: center;
-}}
-
-/* INPUTS */
 .stTextInput input,
 .stNumberInput input {{
     background: rgba(255,255,255,.08) !important;
     color: white !important;
-    border-radius: 12px !important;
-    border: 1px solid rgba(255,255,255,.12) !important;
-    padding: 12px !important;
-}}
-
-/* PROGRESS TEXT */
-.progress-text {{
-    text-align:center;
-    color:#d1d5db;
-    margin-bottom:15px;
+    border-radius:12px !important;
 }}
 
 </style>
 """, unsafe_allow_html=True)
-
 
 # ---------- AIRTABLE ----------
 AIRTABLE_TOKEN = "patryhLp1nLG9lPDB.3281b1a26270f1c0b90483155629d9d4acc983e23e3b885889fabd663372fe3b"
@@ -169,14 +121,13 @@ BASE_ID = "appQdfXVEYUcfsb4t"
 
 TABLE_NAME = "Table 1"
 
-
+# ---------- ZIP PREFIXES ----------
 ALLOWED_PREFIXES = [
-    "90", "91", "92", "93", "94", "95", "96",   # California
-    "60", "61", "62"                            # Illinois
+    "90","91","92","93","94","95","96",
+    "60","61","62"
 ]
 
-
-# ---------- HERO PAGE ----------
+# ---------- HERO ----------
 if st.session_state.step == 0:
 
     st.title("PREMIUM SOLAR FOR MODERN HOMES")
@@ -188,38 +139,29 @@ with premium residential solar solutions.
 Federal incentives may currently be available.
 """)
 
-    st.markdown("""
-<div class="trust">
-
+    st.write("""
 ⭐⭐⭐⭐⭐ Trusted by homeowners nationwide
 
 ✓ Premium Installation Options  
 ✓ Long-Term Utility Savings  
-✓ Professional Solar Consultation  
-
-</div>
-""", unsafe_allow_html=True)
-
-    st.write("")
+✓ Professional Solar Consultation
+""")
 
     if st.button("CHECK MY SAVINGS →"):
+
         st.session_state.step = 1
+
         st.rerun()
 
 
-# ---------- STEP 1 ----------
+# ---------- STEP 1 HOMEOWNER ----------
 elif st.session_state.step == 1:
 
-    st.progress(15)
-
-    st.markdown(
-        '<div class="progress-text">15% Complete</div>',
-        unsafe_allow_html=True
-    )
+    st.progress(10)
 
     st.subheader("Do you own this property?")
 
-    col1, col2 = st.columns(2)
+    col1,col2 = st.columns(2)
 
     with col1:
 
@@ -233,7 +175,7 @@ I Own My Home
 </div>
 """, unsafe_allow_html=True)
 
-        if st.button("SELECT YES"):
+        if st.button("HOMEOWNER YES"):
 
             st.session_state.selection = "Yes"
 
@@ -249,11 +191,11 @@ I Rent Property
 </div>
 """, unsafe_allow_html=True)
 
-        if st.button("SELECT NO"):
+        if st.button("HOMEOWNER NO"):
 
             st.session_state.selection = "No"
 
-    if st.button("CONTINUE"):
+    if st.button("CONTINUE STEP 1"):
 
         if st.session_state.selection == "No":
 
@@ -268,31 +210,47 @@ I Rent Property
             st.session_state.step = 2
 
             st.rerun()
-            # ---------- STEP 2 ----------
+
+
+# ---------- STEP 2 UTILITY ----------
 elif st.session_state.step == 2:
+
+    st.progress(20)
+
+    st.subheader("Who is your electricity provider?")
+
+    utility = st.selectbox(
+        "",
+        [
+            "SDG&E",
+            "PG&E",
+            "Southern California Edison",
+            "ComEd",
+            "Other"
+        ]
+    )
+
+    if st.button("CONTINUE STEP 2"):
+
+        st.session_state.utility = utility
+
+        st.session_state.step = 3
+
+        st.rerun()
+
+
+# ---------- STEP 3 SOLAR EXPERIENCE ----------
+elif st.session_state.step == 3:
 
     st.progress(30)
 
-    st.markdown(
-        '<div class="progress-text">30% Complete</div>',
-        unsafe_allow_html=True
+    st.subheader(
+        "Have you previously explored residential solar options?"
     )
 
-    st.subheader("Have you previously explored residential solar options?")
-
-    col1, col2 = st.columns(2)
+    col1,col2 = st.columns(2)
 
     with col1:
-
-        st.markdown("""
-<div class="card">
-
-### YES
-
-I’ve Looked Into Solar
-
-</div>
-""", unsafe_allow_html=True)
 
         if st.button("SOLAR YES"):
 
@@ -300,21 +258,11 @@ I’ve Looked Into Solar
 
     with col2:
 
-        st.markdown("""
-<div class="card">
-
-### NO
-
-First Time Exploring
-
-</div>
-""", unsafe_allow_html=True)
-
         if st.button("SOLAR NO"):
 
             st.session_state.selection = "No"
 
-    if st.button("CONTINUE STEP 2"):
+    if st.button("CONTINUE STEP 3"):
 
         if st.session_state.selection:
 
@@ -322,20 +270,13 @@ First Time Exploring
 
             st.session_state.selection = None
 
-            st.session_state.step = 3
+            st.session_state.step = 4
 
             st.rerun()
+            # ---------- STEP 4 MONTHLY BILL ----------
+elif st.session_state.step == 4:
 
-
-# ---------- STEP 3 ----------
-elif st.session_state.step == 3:
-
-    st.progress(45)
-
-    st.markdown(
-        '<div class="progress-text">45% Complete</div>',
-        unsafe_allow_html=True
-    )
+    st.progress(40)
 
     st.subheader("What is your average monthly electric bill?")
 
@@ -354,20 +295,15 @@ elif st.session_state.step == 3:
 
             st.session_state.bill = bill
 
-            st.session_state.step = 4
+            st.session_state.step = 5
 
             st.rerun()
 
 
-# ---------- SAVINGS CALCULATOR ----------
-elif st.session_state.step == 4:
+# ---------- STEP 5 SAVINGS CALCULATOR ----------
+elif st.session_state.step == 5:
 
-    st.progress(60)
-
-    st.markdown(
-        '<div class="progress-text">60% Complete</div>',
-        unsafe_allow_html=True
-    )
+    st.progress(55)
 
     monthly = st.session_state.bill * 0.30
     yearly = monthly * 12
@@ -381,30 +317,51 @@ elif st.session_state.step == 4:
 
     st.write(f"### ${twentyfive:,.0f} over 25 years")
 
-    st.write("")
-
     if st.button("CONTINUE TO QUALIFY →"):
 
-        st.session_state.step = 5
+        st.session_state.step = 6
 
         st.rerun()
 
 
-# ---------- STEP 4 ----------
-elif st.session_state.step == 5:
+# ---------- STEP 6 ROOF EXPOSURE ----------
+elif st.session_state.step == 6:
+
+    st.progress(65)
+
+    st.subheader(
+        "How much direct sunlight does your roof receive?"
+    )
+
+    roof = st.selectbox(
+        "",
+        [
+            "Full Sun Most Of Day",
+            "Partial Shade",
+            "Heavy Shade",
+            "Not Sure"
+        ]
+    )
+
+    if st.button("CONTINUE STEP 6"):
+
+        st.session_state.roof = roof
+
+        st.session_state.step = 7
+
+        st.rerun()
+
+
+# ---------- STEP 7 INTEREST ----------
+elif st.session_state.step == 7:
 
     st.progress(75)
-
-    st.markdown(
-        '<div class="progress-text">75% Complete</div>',
-        unsafe_allow_html=True
-    )
 
     st.subheader(
         "Would lowering your monthly energy costs be valuable to you?"
     )
 
-    col1, col2 = st.columns(2)
+    col1,col2 = st.columns(2)
 
     with col1:
 
@@ -413,7 +370,7 @@ elif st.session_state.step == 5:
 
 ### YES
 
-I Want Lower Bills
+Lower My Monthly Bills
 
 </div>
 """, unsafe_allow_html=True)
@@ -438,7 +395,7 @@ Not Interested
 
             st.session_state.selection = "No"
 
-    if st.button("CONTINUE STEP 4"):
+    if st.button("CONTINUE STEP 7"):
 
         if st.session_state.selection == "No":
 
@@ -450,24 +407,21 @@ Not Interested
 
             st.session_state.selection = None
 
-            st.session_state.step = 6
+            st.session_state.step = 8
 
             st.rerun()
-            # ---------- STEP 5 ----------
-elif st.session_state.step == 6:
+
+
+# ---------- STEP 8 ZIP ----------
+elif st.session_state.step == 8:
 
     st.progress(85)
-
-    st.markdown(
-        '<div class="progress-text">85% Complete</div>',
-        unsafe_allow_html=True
-    )
 
     st.subheader("Enter your ZIP code")
 
     zip_code = st.text_input("")
 
-    if st.button("CONTINUE STEP 5"):
+    if st.button("CONTINUE STEP 8"):
 
         if not zip_code.startswith(tuple(ALLOWED_PREFIXES)):
 
@@ -477,22 +431,15 @@ elif st.session_state.step == 6:
 
             st.session_state.zip = zip_code
 
-            st.session_state.step = 7
+            st.session_state.step = 9
 
             st.rerun()
-
-
-# ---------- FINAL LEAD CAPTURE ----------
-elif st.session_state.step == 7:
+            # ---------- STEP 9 LEAD CAPTURE ----------
+elif st.session_state.step == 9:
 
     st.progress(95)
 
-    st.markdown(
-        '<div class="progress-text">Final Qualification Step</div>',
-        unsafe_allow_html=True
-    )
-
-    st.title("You May Qualify")
+    st.title("Your Home May Qualify")
 
     st.write("""
 Where should we send your personalized solar savings estimate?
@@ -502,15 +449,13 @@ Where should we send your personalized solar savings estimate?
 
     phone = st.text_input("Phone Number")
 
-    st.markdown("""
-<div class="trust">
+    email = st.text_input("Email Address")
 
+    st.write("""
 🔒 Your information remains private.
 
 A solar advisor may contact you shortly.
-
-</div>
-""", unsafe_allow_html=True)
+""")
 
     if st.button("GET MY SAVINGS REPORT →"):
 
@@ -522,7 +467,30 @@ A solar advisor may contact you shortly.
 
             st.error("Please enter your phone number.")
 
+        elif email == "":
+
+            st.error("Please enter email address.")
+
         else:
+
+            # ---------- LEAD SCORE ----------
+            score = 0
+
+            # homeowner
+            score += 3
+
+            # high electric bill
+            if st.session_state.bill > 250:
+                score += 3
+
+            # roof exposure
+            if st.session_state.roof == "Full Sun Most Of Day":
+                score += 2
+
+            # interested
+            if st.session_state.interested == "Yes":
+                score += 3
+
 
             today = datetime.now().strftime("%m/%d/%Y")
 
@@ -530,11 +498,15 @@ A solar advisor may contact you shortly.
                 "fields": {
                     "Name": name,
                     "Phone": phone,
+                    "Email": email,
                     "ZIP": st.session_state.zip,
-                    "Looked into Solar": st.session_state.looked,
                     "Homeowner": st.session_state.homeowner,
+                    "Utility Provider": st.session_state.utility,
+                    "Looked into Solar": st.session_state.looked,
                     "Monthly bill": st.session_state.bill,
+                    "Roof Exposure": st.session_state.roof,
                     "interested": st.session_state.interested,
+                    "Lead Score": score,
                     "Date": today
                 }
             }
@@ -554,7 +526,7 @@ A solar advisor may contact you shortly.
 
             if response.status_code == 200:
 
-                st.session_state.step = 8
+                st.session_state.step = 10
 
                 st.rerun()
 
@@ -565,8 +537,8 @@ A solar advisor may contact you shortly.
                 st.write(response.text)
 
 
-# ---------- SUCCESS PAGE ----------
-elif st.session_state.step == 8:
+# ---------- SUCCESS ----------
+elif st.session_state.step == 10:
 
     st.progress(100)
 
@@ -581,16 +553,10 @@ A solar advisor will contact you shortly.
 Thank you for completing your energy assessment.
 """)
 
-    st.markdown("""
-<div class="trust">
+    st.write("")
 
-★★★★★ Premium Residential Solar Solutions
+    st.write("★★★★★ Premium Residential Solar Solutions")
 
-</div>
-""", unsafe_allow_html=True)
-
-
-# ---------- RESET OPTION ----------
     st.write("")
 
     if st.button("START OVER"):
