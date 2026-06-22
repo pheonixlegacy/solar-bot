@@ -441,14 +441,8 @@ elif st.session_state.step == 9:
 
     st.title("Your Home May Qualify")
 
-    st.write("""
-Where should we send your personalized solar savings estimate?
-""")
-
     name = st.text_input("Full Name")
-
-        phone = st.text_input("Phone Number")
-
+    phone = st.text_input("Phone Number")
     email = st.text_input("Email Address")
 
     st.write("""
