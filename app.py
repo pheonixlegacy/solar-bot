@@ -6,7 +6,7 @@ from datetime import datetime
 # Airtable config
 AIRTABLE_TOKEN = "patryhLp1nLG9lPDB"
 BASE_ID = "appQdfXVEYUcfsb4t"
-TABLE_NAME = "Solar leads"
+TABLE_NAME = "Table 1"
 
 # Page title
 st.title("Free Solar Savings Check")
