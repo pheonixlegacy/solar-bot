@@ -170,11 +170,9 @@ BASE_ID = "appQdfXVEYUcfsb4t"
 TABLE_NAME = "Table 1"
 
 
-ALLOWED_ZIPS = [
-    "60037",
-    "60199",
-    "60522",
-    "60699"
+ALLOWED_PREFIXES = [
+    "90", "91", "92", "93", "94", "95", "96",   # California
+    "60", "61", "62"                            # Illinois
 ]
 
 
@@ -471,7 +469,7 @@ elif st.session_state.step == 6:
 
     if st.button("CONTINUE STEP 5"):
 
-        if zip_code not in ALLOWED_ZIPS:
+        if not zip_code.startswith(tuple(ALLOWED_PREFIXES)):
 
             st.error("Sorry — service unavailable in your area.")
 
