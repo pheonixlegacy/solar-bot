@@ -457,7 +457,7 @@ Where should we send your personalized solar savings estimate?
 A solar advisor may contact you shortly.
 """)
 
-    if st.button("GET MY SAVINGS REPORT →"):
+   if st.button("GET MY SAVINGS REPORT →"):
 
     if name == "":
         st.error("Please enter your name.")
@@ -471,10 +471,7 @@ A solar advisor may contact you shortly.
     elif email == "":
         st.error("Please enter email address.")
 
-else:
-    # lead score logic starts here
-    score = 0
-
+    else:
     # homeowner
     score += 3
 
