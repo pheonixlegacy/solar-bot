@@ -459,41 +459,36 @@ A solar advisor may contact you shortly.
 
     if st.button("GET MY SAVINGS REPORT →"):
 
-        if name == "":
+    if name == "":
+        st.error("Please enter your name.")
 
-    st.error("Please enter your name.")
+    elif phone == "":
+        st.error("Please enter your phone number.")
 
-elif phone == "":
+    elif len(phone) != 10 or not phone.isdigit():
+        st.error("Please enter a valid 10 digit phone number.")
 
-    st.error("Please enter your phone number.")
-
-elif len(phone) != 10 or not phone.isdigit():
-
-    st.error("Please enter a valid 10 digit phone number.")
-
-elif email == "":
-
-    st.error("Please enter email address.")
+    elif email == "":
+        st.error("Please enter email address.")
 
 else:
+    # lead score logic starts here
+    score = 0
 
-            # ---------- LEAD SCORE ----------
-            score = 0
+    # homeowner
+    score += 3
 
-            # homeowner
-            score += 3
+    # high electric bill
+    if st.session_state.bill > 250:
+        score += 3
 
-            # high electric bill
-            if st.session_state.bill > 250:
-                score += 3
+    # roof exposure
+    if st.session_state.roof == "Full Sun Most Of Day":
+        score += 2
 
-            # roof exposure
-            if st.session_state.roof == "Full Sun Most Of Day":
-                score += 2
-
-            # interested
-            if st.session_state.interested == "Yes":
-                score += 3
+    # interested
+    if st.session_state.interested == "Yes":
+        score += 3
 
 
             today = datetime.now().strftime("%m/%d/%Y")
