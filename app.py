@@ -115,13 +115,13 @@ p {{
 """, unsafe_allow_html=True)
 
 # ---------- AIRTABLE ----------
-AIRTABLE_TOKEN = "patryhLp1nLG9lPDB.3281b1a26270f1c0b90483155629d9d4acc983e23e3b885889fabd663372fe3b"
+AIRTABLE_TOKEN = st.secrets["patryhLp1nLG9lPDB.3281b1a26270f1c0b90483155629d9d4acc983e23e3b885889fabd663372fe3b"]
 
-BASE_ID = "appQdfXVEYUcfsb4t"
+BASE_ID = st.secrets["appQdfXVEYUcfsb4t"]
 
-TABLE_NAME = "Table 1"
+TABLE_NAME = st.secrets["Table 1"]
 
-DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1518638918386581545/uzEFI4DYbrVqqjklMQXN2DbdLpurDsfobeCZbxwK35rPcp6Dt0EKX1XjF59nGkTSOv10"
+DISCORD_WEBHOOK = st.secrets["https://discord.com/api/webhooks/1518638918386581545/uzEFI4DYbrVqqjklMQXN2DbdLpurDsfobeCZbxwK35rPcp6Dt0EKX1XjF59nGkTSOv10"]
 
 # ---------- ZIP PREFIXES ----------
 ALLOWED_PREFIXES = [
