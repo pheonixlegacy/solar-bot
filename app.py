@@ -8,6 +8,14 @@ AIRTABLE_TOKEN = "patryhLp1nLG9lPDB.3281b1a26270f1c0b90483155629d9d4acc983e23e3b
 BASE_ID = "appQdfXVEYUcfsb4t"
 TABLE_NAME = "Table 1"
 
+# Allowed service ZIP codes
+ALLOWED_ZIPS = [
+    "60037",
+    "60199",
+    "60522",
+    "60699"
+]
+
 # Page title
 st.title("Free Solar Savings Check")
 st.write("Answer a few quick questions to see if you qualify.")
@@ -35,58 +43,67 @@ q4 = st.radio(
 
 name = st.text_input("Your name")
 phone = st.text_input("Best phone number")
+zip_code = st.text_input("ZIP Code")
 
-# Submit button
+# Submit
 if st.button("Check Qualification"):
 
-    # Validation
+    # validation
     if name == "":
         st.error("Please enter your name.")
 
-    elif len(phone) < 10:
-        st.error("Please enter a valid phone number.")
+    elif phone == "":
+        st.error("Please enter your phone number.")
+
+    elif zip_code == "":
+        st.error("Please enter ZIP code.")
+
+    elif zip_code not in ALLOWED_ZIPS:
+        st.error("Sorry, we do not currently service your area.")
+
+    elif q2 != "Yes":
+        st.error("Sorry, only homeowners qualify at this time.")
+
+    elif bill < 100:
+        st.error("Your electric bill must be over $100 to qualify.")
+
+    elif q4 != "Yes":
+        st.error("No problem — reach out if you change your mind.")
 
     else:
+        # qualifies
+        st.success("You qualify for a solar consultation.")
 
-        # Airtable API URL
+        today = datetime.now().strftime("%m/%d/%Y")
+
+        data = {
+            "fields": {
+                "Name": name,
+                "Phone": phone,
+                "ZIP": zip_code,
+                "Looked into Solar": q1,
+                "Homeowner": q2,
+                "Monthly bill": bill,
+                "interested": q4,
+                "Date": today
+            }
+        }
+
         url = f"https://api.airtable.com/v0/{BASE_ID}/{TABLE_NAME}"
 
-        # Headers
         headers = {
             "Authorization": f"Bearer {AIRTABLE_TOKEN}",
             "Content-Type": "application/json"
         }
 
-        # Data sent to Airtable
-        data = {
-            "fields": {
-                "Name": name,
-                "Phone": phone,
-                "Looked into Solar": q1,
-                "Homeowner": q2,
-                "Monthly bill": bill,
-                "interested": q4,
-                "Date": datetime.today().strftime("%Y-%m-%d")
-            }
-        }
-
-        # Send request
         response = requests.post(
             url,
             headers=headers,
             data=json.dumps(data)
         )
 
-        # Success check
-        if response.status_code in [200, 201]:
-
-            if q1 == "Yes" and q2 == "Yes" and bill > 120 and q4 == "Yes":
-                st.success("✅ You qualify for a solar consultation.")
-                st.write("Your information has been saved.")
-
-            else:
-                st.warning("⚠️ Saved, but customer may not qualify.")
-
+        if response.status_code == 200:
+            st.write("Your information has been saved.")
         else:
             st.error("Airtable Error:")
             st.write(response.text)
