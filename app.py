@@ -1,4 +1,10 @@
 import streamlit as st
+import requests
+import json
+
+AIRTABLE_TOKEN = "HIDDEN"
+BASE_ID = "appQdfXVEYUcfsb4t"
+TABLE_NAME = "Solar leads"
 
 # Page title
 st.title("Free Solar Savings Check")
@@ -40,10 +46,36 @@ if st.button("Check Qualification"):
         st.error("Please enter a valid phone number.")
 
     else:
-        # Qualification logic
-        if q1 == "Yes" and q2 == "Yes" and bill > 120 and q4 == "Yes":
-            st.success("✅ You qualify for a solar consultation.")
-            st.write("Our team will contact you shortly.")
+        # Airtable save
+        url = f"https://api.airtable.com/v0/{BASE_ID}/{TABLE_NAME}"
 
+        headers = {
+            "Authorization": f"Bearer {AIRTABLE_TOKEN}",
+            "Content-Type": "application/json"
+        }
+
+        data = {
+            "fields": {
+                "Name": name,
+                "Phone": phone,
+                "Looked into Solar": q1,
+                "Homeowner": q2,
+                "Monthly bill": bill,
+                "interested": q4
+            }
+        }
+
+        response = requests.post(
+            url,
+            headers=headers,
+            data=json.dumps(data)
+        )
+
+        if response.status_code == 200:
+            if q1 == "Yes" and q2 == "Yes" and bill > 120 and q4 == "Yes":
+                st.success("✅ You qualify for a solar consultation.")
+                st.write("Your information has been saved.")
+            else:
+                st.warning("⚠️ Saved, but customer may not qualify.")
         else:
-            st.warning("⚠️ Based on your answers, you may not qualify at this time.")
+            st.error("Error saving lead.")
