@@ -447,7 +447,7 @@ Where should we send your personalized solar savings estimate?
 
     name = st.text_input("Full Name")
 
-    phone = st.text_input("Phone Number")
+        phone = st.text_input("Phone Number")
 
     email = st.text_input("Email Address")
 
@@ -457,10 +457,10 @@ Where should we send your personalized solar savings estimate?
 A solar advisor may contact you shortly.
 """)
 
-   if st.button("GET MY SAVINGS REPORT →"):
+    if st.button("GET MY SAVINGS REPORT →"):
 
-    if name == "":
-        st.error("Please enter your name.")
+        if name == "":
+            st.error("Please enter your name.")
 
     elif phone == "":
         st.error("Please enter your phone number.")
