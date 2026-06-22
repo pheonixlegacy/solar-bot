@@ -451,7 +451,7 @@ Where should we send your personalized solar savings estimate?
 
 A solar advisor may contact you shortly.
 """)
-        if st.button("GET MY SAVINGS REPORT →"):
+    if st.button("GET MY SAVINGS REPORT →"):
 
         if name == "":
             st.error("Please enter your name.")
