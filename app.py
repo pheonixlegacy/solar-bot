@@ -60,8 +60,8 @@ ALLOWED_ZIPS = [
 ]
 
 # Page title
-st.title("Free Solar Savings Check")
-st.write("Answer a few quick questions to see if you qualify.")
+st.title("⚡ See If Your Home Qualifies For Solar Savings")
+st.write("Save up to 30% on electricity in under 30 seconds.")
 
 # Questions
 q1 = st.radio(
