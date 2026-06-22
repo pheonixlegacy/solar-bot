@@ -1,105 +1,128 @@
 import streamlit as st
 import requests
 import json
+import base64
 from datetime import datetime
 
 # ---------- PAGE CONFIG ----------
 st.set_page_config(
-    page_title="Solar Savings Check",
+    page_title="Premium Solar Savings",
     layout="centered"
 )
 
-# ---------- CUSTOM CSS ----------
-st.markdown("""
+# ---------- LOAD LOCAL BACKGROUND IMAGE ----------
+def get_base64(file_name):
+    with open(file_name, "rb") as img_file:
+        return base64.b64encode(img_file.read()).decode()
+
+# Must match your GitHub uploaded file exactly
+bg = get_base64("JPEG image.jpeg")
+
+# ---------- PREMIUM UI CSS ----------
+st.markdown(f"""
 <style>
 
-/* Background */
-.stApp {
-    background: #0b1120;
-}
+/* Full page luxury background */
+.stApp {{
+    background-image:
+        linear-gradient(
+            rgba(0,0,0,0.78),
+            rgba(0,0,0,0.78)
+        ),
+        url("data:image/jpeg;base64,{bg}");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}}
 
-/* Hero image */
-img {
-    border-radius: 18px;
-}
+/* Hide Streamlit menu/footer */
+#MainMenu {{
+    visibility: hidden;
+}}
 
-/* Main card */
-.main .block-container {
-    max-width: 760px;
-    background: rgba(17, 24, 39, 0.88);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    padding: 2rem;
-    border-radius: 22px;
-    margin-top: 1rem;
-    box-shadow: 0px 8px 30px rgba(0,0,0,0.35);
-}
+footer {{
+    visibility: hidden;
+}}
 
-/* Headings */
-h1 {
+header {{
+    visibility: hidden;
+}}
+
+/* Glass card */
+.main .block-container {{
+    max-width: 720px;
+    background: rgba(10, 15, 25, 0.72);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    padding: 2.5rem;
+    border-radius: 24px;
+    margin-top: 2rem;
+    border: 1px solid rgba(255,255,255,0.08);
+}}
+
+/* Main title */
+h1 {{
     text-align: center;
     color: white;
-    font-size: 44px !important;
-    font-weight: 800 !important;
-}
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}}
 
 /* Text */
-p, label, div {
-    color: #f3f4f6 !important;
-}
+p {{
+    color: #d1d5db !important;
+    text-align: center;
+    font-size: 17px;
+}}
+
+label {{
+    color: white !important;
+    font-weight: 500;
+}}
 
 /* Inputs */
-.stTextInput > div > div > input {
-    background-color: rgba(255,255,255,0.08);
+.stTextInput input {{
+    background: rgba(255,255,255,0.08);
+    color: white;
+    border-radius: 12px;
     border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 12px;
-    padding: 12px;
-    color: white;
-}
+}}
 
-.stNumberInput input {
-    background-color: rgba(255,255,255,0.08);
-    border-radius: 12px;
+.stNumberInput input {{
+    background: rgba(255,255,255,0.08);
     color: white;
-}
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.12);
+}}
 
 /* Button */
-.stButton > button {
+.stButton > button {{
     width: 100%;
     height: 65px;
-    border-radius: 14px;
-    font-weight: bold;
+    background: linear-gradient(90deg,#f59e0b,#fbbf24);
+    color: black;
     font-size: 20px;
-    background: linear-gradient(90deg, #22c55e, #16a34a);
-    color: white;
+    font-weight: bold;
     border: none;
-    box-shadow: 0px 4px 20px rgba(34,197,94,.30);
-}
+    border-radius: 14px;
+    box-shadow: 0 5px 20px rgba(251,191,36,.25);
+}}
 
-/* Small trust text */
-.trust {
-    text-align:center;
-    color:#9ca3af;
-    font-size:14px;
-    margin-bottom:20px;
-}
-
-.benefits {
-    text-align:center;
-    font-size:16px;
-    margin-bottom:10px;
-    line-height:1.8;
-}
+/* Success/Error boxes */
+.stSuccess, .stError {{
+    border-radius: 14px;
+}}
 
 </style>
 """, unsafe_allow_html=True)
 
-# ---------- AIRTABLE ----------
+# ---------- AIRTABLE CONFIG ----------
 AIRTABLE_TOKEN = "patryhLp1nLG9lPDB.3281b1a26270f1c0b90483155629d9d4acc983e23e3b885889fabd663372fe3b"
 BASE_ID = "appQdfXVEYUcfsb4t"
 TABLE_NAME = "Table 1"
 
-# ---------- ZIPS ----------
+# ---------- ALLOWED ZIPS ----------
 ALLOWED_ZIPS = [
     "60037",
     "60199",
@@ -108,25 +131,20 @@ ALLOWED_ZIPS = [
 ]
 
 # ---------- HERO SECTION ----------
-st.image("tesla-house.png", use_container_width=True)
-
-st.title("⚡ Lower Your Electric Bill By Up To 30%")
+st.title("Premium Solar For Modern Homes")
 
 st.markdown("""
-<div class="benefits">
-✓ Federal solar incentives available<br>
-✓ Zero upfront options may be available<br>
-✓ Serving select Illinois homeowners
-</div>
-""", unsafe_allow_html=True)
+### Start Saving On Electricity Without Changing Your Lifestyle  
 
-st.markdown("""
-<div class="trust">
-Check eligibility in under 30 seconds.
-</div>
-""", unsafe_allow_html=True)
+⭐⭐⭐⭐⭐ Trusted by qualified homeowners  
 
-st.subheader("Quick Solar Qualification")
+✓ Reduce monthly utility costs  
+✓ Premium home solar installation  
+✓ Increase long-term property value  
+✓ Fast 30-second qualification process  
+
+**Get your personalized solar savings estimate below.**
+""")
 
 # ---------- FORM ----------
 q1 = st.radio(
@@ -145,16 +163,18 @@ bill = st.number_input(
 )
 
 q4 = st.radio(
-    "If we lower your bill, are you interested?",
+    "Would reducing that bill interest you?",
     ["Yes", "No"]
 )
 
 name = st.text_input("Full Name")
-phone = st.text_input("Phone Number")
+
+phone = st.text_input("Best Phone Number")
+
 zip_code = st.text_input("ZIP Code")
 
 # ---------- SUBMIT ----------
-if st.button("CHECK MY SAVINGS →"):
+if st.button("Check My Savings"):
 
     if name == "":
         st.error("Please enter your name.")
@@ -166,20 +186,20 @@ if st.button("CHECK MY SAVINGS →"):
         st.error("Please enter ZIP code.")
 
     elif zip_code not in ALLOWED_ZIPS:
-        st.error("Sorry, we do not service your area yet.")
+        st.error("Sorry — service unavailable in your area.")
 
     elif q2 != "Yes":
         st.error("Currently only homeowners qualify.")
 
     elif bill < 100:
-        st.error("Minimum electric bill is $100.")
+        st.error("Monthly electric bill must be above $100.")
 
     elif q4 != "Yes":
-        st.error("No problem. Reach out anytime.")
+        st.error("No problem — reach back out anytime.")
 
     else:
 
-        st.success("🎉 You qualify for a solar consultation.")
+        st.success("You qualify for a solar consultation.")
 
         today = datetime.now().strftime("%m/%d/%Y")
 
@@ -210,8 +230,8 @@ if st.button("CHECK MY SAVINGS →"):
         )
 
         if response.status_code == 200:
-            st.success("Your information has been saved.")
+            st.success("Your information has been submitted.")
 
         else:
-            st.error("Airtable Error:")
+            st.error("Airtable Error")
             st.write(response.text)
