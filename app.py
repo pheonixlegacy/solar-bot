@@ -461,17 +461,21 @@ A solar advisor may contact you shortly.
 
         if name == "":
 
-            st.error("Please enter your name.")
+    st.error("Please enter your name.")
 
-        elif phone == "":
+elif phone == "":
 
-            st.error("Please enter your phone number.")
+    st.error("Please enter your phone number.")
 
-        elif email == "":
+elif len(phone) != 10 or not phone.isdigit():
 
-            st.error("Please enter email address.")
+    st.error("Please enter a valid 10 digit phone number.")
 
-        else:
+elif email == "":
+
+    st.error("Please enter email address.")
+
+else:
 
             # ---------- LEAD SCORE ----------
             score = 0
